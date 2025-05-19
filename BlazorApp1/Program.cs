@@ -1,28 +1,33 @@
+using BlazorApp1.Components.models;
+using BlazorApp1.Components.services;
+using BlazorApp1.Components.Layout.DAL;
+using Microsoft.EntityFrameworkCore;
 using BlazorApp1.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+// Cadena de conexión
+var connectionString = builder.Configuration.GetConnectionString("SqlConStr");
+
+// Servicios
+builder.Services.AddRazorComponents().AddInteractiveServerComponents();
+builder.Services.AddScoped<TecnicosService>();
+builder.Services.AddDbContext<ContextoPrueba>(options =>
+    options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Middleware
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-
-
 app.UseAntiforgery();
 
 app.MapStaticAssets();
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 app.Run();
