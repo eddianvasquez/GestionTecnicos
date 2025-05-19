@@ -1,0 +1,65 @@
+﻿@page "/tecnicos/edit/{id:int}"
+@inject TecnicosService service
+@inject NavigationManager nav
+@inject IJSRuntime JS
+@using BlazorApp1.Components.models
+@using BlazorApp1.Components.services
+@using BlazorApp1.Components.services
+@inject TecnicosService TecnicosService
+
+<h3>Editar Técnico</h3>
+
+@if (tecnico == null)
+{
+    <p><em>Cargando técnico...</em></p>
+}
+else
+{
+    <EditForm Model="@tecnico" OnValidSubmit="Guardar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label>Nombre:</label>
+            <InputText class="form-control" @bind-Value="tecnico.Nombres" />
+        </div>
+
+        <div class="mb-3">
+            <label>Sueldo por hora:</label>
+            <InputNumber class="form-control" @bind-Value="tecnico.SueldoHora" />
+        </div>
+
+        <button class="btn btn-success" type="submit">Guardar cambios</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    Tecnico tecnico = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        tecnico = await service.Buscar(id);
+        if (tecnico == null)
+        {
+            await JS.InvokeVoidAsync("alert", "Técnico no encontrado.");
+            nav.NavigateTo("/tecnicos");
+        }
+    }
+
+    async Task Guardar()
+    {
+        var actualizado = await service.Modificar(tecnico);
+        if (actualizado)
+        {
+            await JS.InvokeVoidAsync("alert", "Técnico actualizado.");
+            nav.NavigateTo("/tecnicos");
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "Error: ya existe un técnico con ese nombre.");
+        }
+    }
+}
