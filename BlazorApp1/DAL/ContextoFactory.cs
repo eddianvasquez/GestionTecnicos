@@ -8,7 +8,7 @@ namespace BlazorApp1.DAL
         public Contexto CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<Contexto>();
-            optionsBuilder.UseSqlServer("workstation id=Gestiondetecnico.mssql.somee.com;packet size=4096;user id=pollote_SQLLogin_2;pwd=9ohsqjlghz;data source=Gestiondetecnico.mssql.somee.com;persist security info=False;initial catalog=Gestiondetecnico;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Server=GestionTecnico.mssql.somee.com;packet size=4096;user id=pollotemore_SQLLogin_1;pwd=89zy54g4e2;data source=GestionTecnico.mssql.somee.com;persist security info=False;initial catalog=GestionTecnico;TrustServerCertificate=True;");
 
             return new Contexto(optionsBuilder.Options);
         }
