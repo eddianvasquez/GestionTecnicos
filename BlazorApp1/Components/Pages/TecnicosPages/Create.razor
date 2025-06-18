@@ -1,0 +1,48 @@
+﻿@page "/tecnicos/create"
+@inject TecnicosService service
+@inject NavigationManager nav
+@inject IJSRuntime JS
+@using BlazorApp1.Components.models
+@using BlazorApp1.Components.services
+@using BlazorApp1.Components.services
+@using BlazorApp1.models
+@using BlazorApp1.services
+@inject TecnicosService TecnicosService
+
+
+<h3>Registrar Técnico</h3>
+
+<EditForm Model="@tecnico" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>Nombre:</label>
+        <InputText class="form-control" @bind-Value="tecnico.Nombres" />
+    </div>
+
+    <div class="mb-3">
+        <label>Sueldo por hora:</label>
+        <InputNumber class="form-control" @bind-Value="tecnico.SueldoHora" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+</EditForm>
+
+@code {
+    Tecnico tecnico = new();
+
+    async Task Guardar()
+    {
+        var resultado = await service.Guardar(tecnico);
+        if (resultado)
+        {
+            await JS.InvokeVoidAsync("alert", "Técnico guardado correctamente.");
+            nav.NavigateTo("/tecnicos");
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "Ya existe un técnico con ese nombre.");
+        }
+    }
+}
